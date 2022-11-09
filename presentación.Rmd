@@ -1,0 +1,70 @@
+---
+title: "Untitled"
+author: "Ronald Palencia"
+date: '2022-11-08'
+output:
+  beamer_presentation: default
+  ioslides_presentation: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+library(quantmod)
+```
+
+## R Markdown
+
+This is an R Markdown presentation. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+
+When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document.
+
+## Slide with Bullets
+
+- Bullet 1
+- Bullet 2
+- Bullet 3
+
+## Slide with R Output
+
+```{r}
+sp500 = getSymbols('^GSPC', from = '1995-1-1', auto.assign = F)
+```
+
+
+```{r}
+tail(sp500)
+```
+
+
+```{r cars, echo = TRUE}
+summary(cars)
+```
+
+
+
+```{python}
+import pandas as pd
+### permite obtener data frames directamente de internet
+!pip install yfinance
+
+```
+
+
+```{python}
+import yfinance as yf
+```
+
+
+```{python}
+#define the ticker symbol
+tickerSymbol = '^GSPC'
+
+#get data on this ticker
+tickerData = yf.Ticker(tickerSymbol)
+
+#get the historical prices for this ticker
+gs = tickerData.history(period='1d', start='1995-1-1', end='2022-11-7')
+
+#see your data
+gs.head(10)
+```
