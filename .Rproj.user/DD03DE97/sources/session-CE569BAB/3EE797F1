@@ -3,7 +3,7 @@
     "path": "~/GitHub/trabajo4_series/presentación.Rmd",
     "project_path": "presentación.Rmd",
     "type": "r_markdown",
-    "hash": "1728199465",
+    "hash": "0",
     "contents": "",
     "dirty": false,
     "created": 1668103225600.0,
@@ -12,16 +12,16 @@
     "properties": {
         "source_window_id": "",
         "Source": "Source",
-        "last_setup_crc32": "",
-        "cursorPosition": "14,14",
-        "scrollLine": "0"
+        "last_setup_crc32": "CE569BABa68b900b",
+        "cursorPosition": "124,0",
+        "scrollLine": "107"
     },
     "folds": "",
     "lastKnownWriteTime": 1668104217,
     "encoding": "UTF-8",
     "collab_server": "",
     "source_window": "",
-    "last_content_update": 1668104734160,
+    "last_content_update": 1668105007990,
     "read_only": false,
     "read_only_alternatives": []
 }
