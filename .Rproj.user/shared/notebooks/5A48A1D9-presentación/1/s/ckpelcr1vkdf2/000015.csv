@@ -1,0 +1,4 @@
+"0","GSPC <- tq_get('^GSPC', from = ""2009-01-01"", get = ""stock.prices"")"
+"2","Error in loadNamespace(i, c(lib.loc, .libPaths()), versionCheck = vI[[i]]) : 
+  there is no package called ‘recipes’
+"
