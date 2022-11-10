@@ -1,0 +1,358 @@
+---
+title: "tarera1"
+author: "Ronald"
+date: '2022-08-11'
+output:
+  pdf_document: default
+  html_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+#install.packages("tidyquant")
+library(tidyquant)
+library(quantmod)
+library(tidyverse)
+#library(rlang)
+#remove.packages("rlang")
+#.libPaths()
+require(magrittr)
+```
+# Solución taller 1
+
+
+## Repetir los códigos de esta presentación en sus computadores mediante el uso del RStudio.
+
+
+
+
+
+
+```{r}
+ # Paquete para usar los pipes
+BD1<-read.csv("../Datos/BANC_2020_JUN_JUL.csv", header=TRUE)
+```
+
+
+
+
+
+
+```{r}
+BD1 %>% dim()
+```
+
+
+
+
+
+
+```{r}
+BD1 %>% head()
+```
+
+```{r}
+BD1 %>% tail(3)
+```
+
+
+```{r}
+
+
+BD1$Date %<>% as.Date() # Date a formato Fecha:
+
+BD1
+ggplot(BD1, aes(x=Date, y=Close))+
+geom_line(col="blue") + labs(title="Gráfico 1")
+
+```
+
+
+```{r}
+
+ggplot(BD1, aes(x=Date, y=Volume))+
+geom_line(col="blue") + labs(title="Gráfico 2")
+```
+
+
+
+```{r}
+#BD2 <- read.csv("/home/usuario/Documentos/Series/Datos/Precipitaciones_Totales_Mensuales.csv",
+#header=TRUE,fileEncoding = "utf8")
+BD2 <- read.csv("../Datos/Precipitaciones_Totales_Mensuales.csv",
+header=TRUE,fileEncoding = "utf8")
+
+
+```
+
+
+
+
+```{r}
+BD2 %>% head()
+```
+
+
+
+
+```{r}
+BD2 %>% dim()
+```
+
+```{r}
+BD2 %>% filter(ESTACION=="Mesitas") %>% head(5)
+```
+
+
+```{r}
+BD2_1 <- filter(BD2, ESTACION=="Mesitas")
+BD2_2 <- gather(BD2_1, "ENERO", "FEBRERO", "MARZO",
+"ABRIL","MAYO", "JUNIO", "JULIO","AGOSTO",
+"SEPTIEMBRE","OCTUBRE", "NOVIEMBRE",
+"DICIEMBRE", key="MES",value="PRECIP") ## pasa los meses a una columna que se llama mes y otra que se llama precip que tiene los valores
+head(BD2_2)
+
+dim(BD2_2)
+BD2_3 <- BD2_2[order(BD2_2$ANIO),]
+head(BD2_3)
+BD2_3$Fecha <- paste(rep(1,nrow(BD2_3)),BD2_3$MES,BD2_3$ANIO)
+head(BD2_3)
+BD2_3$Fecha %<>% as.Date(format=" %d %B %Y")
+head(BD2_3)
+```
+
+```{r}
+BD2_1 <- filter(BD2, ESTACION=="San Isidro")
+BD2_2 <- gather(BD2_1, "ENERO", "FEBRERO", "MARZO", "ABRIL",
+"MAYO", "JUNIO", "JULIO","AGOSTO",
+"SEPTIEMBRE","OCTUBRE", "NOVIEMBRE",
+"DICIEMBRE", key="MES",value="PRECIP")
+BD2_3 <- BD2_2[order(BD2_2$ANIO),]
+BD2_3$Fecha <- paste(rep(1,nrow(BD2_3)),
+BD2_3$MES,BD2_3$ANIO)
+BD2_3$Fecha %<>% as.Date(format=" %d %B %Y")
+ggplot(BD2_3, aes(x=Fecha, y=PRECIP))+
+geom_line(col="black") + labs(title="Gráfico 4")
+```
+
+
+```{r}
+BD3 <- read_csv("../Datos/master.csv")
+```
+```{r}
+BD3 %>% dim()
+```
+
+
+
+
+```{r}
+BD3_1<-filter(BD3, country=="Colombia")
+BD3_2 <- BD3_1 %>% group_by(year) %>%
+summarise(nsuic=sum(suicides_no), pob=sum(population))
+ggplot(BD3_2, aes(x=year, y=nsuic))+
+geom_line(col="blue") + labs(title="Gráfico 5")+
+geom_vline(xintercept = 1998, col="red", lty=2)
+
+```
+
+
+
+
+## Graficar las series de tiempo de al menos otras tres estaciones en la base de datos de precipitaciones del ejemplo 2.
+
+
+```{r}
+BD2$ESTACION %>% unique()  
+```
+
+
+```{r}
+BD2_1 <- filter(BD2, ESTACION=="Represa Sisga")
+BD2_2 <- gather(BD2_1, "ENERO", "FEBRERO", "MARZO", "ABRIL",
+"MAYO", "JUNIO", "JULIO","AGOSTO",
+"SEPTIEMBRE","OCTUBRE", "NOVIEMBRE",
+"DICIEMBRE", key="MES",value="PRECIP")
+BD2_3 <- BD2_2[order(BD2_2$ANIO),]
+BD2_3$Fecha <- paste(rep(1,nrow(BD2_3)),
+BD2_3$MES,BD2_3$ANIO)
+BD2_3$Fecha %<>% as.Date(format=" %d %B %Y")
+ggplot(BD2_3, aes(x=Fecha, y=PRECIP))+
+geom_line(col="black") + labs(title="Gráfico 4")
+```
+
+```{r}
+BD2_1 <- filter(BD2, ESTACION=="La Guaquira")
+BD2_2 <- gather(BD2_1, "ENERO", "FEBRERO", "MARZO", "ABRIL",
+"MAYO", "JUNIO", "JULIO","AGOSTO",
+"SEPTIEMBRE","OCTUBRE", "NOVIEMBRE",
+"DICIEMBRE", key="MES",value="PRECIP")
+BD2_3 <- BD2_2[order(BD2_2$ANIO),]
+BD2_3$Fecha <- paste(rep(1,nrow(BD2_3)),
+BD2_3$MES,BD2_3$ANIO)
+BD2_3$Fecha %<>% as.Date(format=" %d %B %Y")
+ggplot(BD2_3, aes(x=Fecha, y=PRECIP))+
+geom_line(col="black") + labs(title="Gráfico 4")
+```
+
+
+
+
+```{r}
+BD2_1 <- filter(BD2, ESTACION=="El Espino")
+BD2_2 <- gather(BD2_1, "ENERO", "FEBRERO", "MARZO", "ABRIL",
+"MAYO", "JUNIO", "JULIO","AGOSTO",
+"SEPTIEMBRE","OCTUBRE", "NOVIEMBRE",
+"DICIEMBRE", key="MES",value="PRECIP")
+BD2_3 <- BD2_2[order(BD2_2$ANIO),]
+BD2_3$Fecha <- paste(rep(1,nrow(BD2_3)),
+BD2_3$MES,BD2_3$ANIO)
+BD2_3$Fecha %<>% as.Date(format=" %d %B %Y")
+ggplot(BD2_3, aes(x=Fecha, y=PRECIP))+
+geom_line(col="black") + labs(title="Gráfico 4")
+```
+
+
+```{r}
+BD2_1 <- filter(BD2, ESTACION=="Monserrate")
+BD2_2 <- gather(BD2_1, "ENERO", "FEBRERO", "MARZO", "ABRIL",
+"MAYO", "JUNIO", "JULIO","AGOSTO",
+"SEPTIEMBRE","OCTUBRE", "NOVIEMBRE",
+"DICIEMBRE", key="MES",value="PRECIP")
+BD2_3 <- BD2_2[order(BD2_2$ANIO),]
+BD2_3$Fecha <- paste(rep(1,nrow(BD2_3)),
+BD2_3$MES,BD2_3$ANIO)
+BD2_3$Fecha %<>% as.Date(format=" %d %B %Y")
+ggplot(BD2_3, aes(x=Fecha, y=PRECIP))+
+geom_line(col="black") + labs(title="Gráfico 4")
+```
+
+
+
+## Graficar la evolución del total de suicidios y de la poblaciónde al menos otros tres países en la base de datos de tasas de suicidios del ejemplo 3.
+
+```{r}
+BD3$country %>% unique()
+```
+
+
+```{r}
+BD3_1<-filter(BD3, country=="Mexico")
+BD3_2 <- BD3_1 %>% group_by(year) %>%
+summarise(nsuic=sum(suicides_no), pob=sum(population))
+ggplot(BD3_2, aes(x=year, y=nsuic))+
+geom_line(col="blue") + labs(title="Gráfico 5")+
+geom_vline(xintercept = 1998, col="red", lty=2)
+```
+
+
+
+```{r}
+
+BD3_1<-filter(BD3, country=="New Zealand")
+BD3_2 <- BD3_1 %>% group_by(year) %>%
+summarise(nsuic=sum(suicides_no), pob=sum(population))
+ggplot(BD3_2, aes(x=year, y=nsuic))+
+geom_line(col="blue") + labs(title="Gráfico 5")+
+geom_vline(xintercept = 1998, col="red", lty=2)
+```
+
+
+```{r}
+
+BD3_1<-filter(BD3, country=="Cuba")
+BD3_2 <- BD3_1 %>% group_by(year) %>%
+summarise(nsuic=sum(suicides_no), pob=sum(population))
+ggplot(BD3_2, aes(x=year, y=nsuic))+
+geom_line(col="blue") + labs(title="Gráfico 5")+
+geom_vline(xintercept = 1998, col="red", lty=2)
+```
+
+
+
+
+
+```{r}
+BD3_1<-filter(BD3, country=="Japan")
+BD3_2 <- BD3_1 %>% group_by(year) %>%
+summarise(nsuic=sum(suicides_no), pob=sum(population))
+ggplot(BD3_2, aes(x=year, y=nsuic))+
+geom_line(col="blue") + labs(title="Gráfico 5")+
+geom_vline(xintercept = 1998, col="red", lty=2)
+```
+
+
+
+
+```{r}
+
+BD3_1<-filter(BD3, country=="Chile")
+BD3_2 <- BD3_1 %>% group_by(year) %>%
+summarise(nsuic=sum(suicides_no), pob=sum(population))
+ggplot(BD3_2, aes(x=year, y=nsuic))+
+geom_line(col="blue") + labs(title="Gráfico 5")+
+geom_vline(xintercept = 1998, col="red", lty=2)
+```
+
+```{r}
+
+BD3_1<-filter(BD3, country=="South Africa")
+BD3_2 <- BD3_1 %>% group_by(year) %>%
+summarise(nsuic=sum(suicides_no), pob=sum(population))
+ggplot(BD3_2, aes(x=year, y=nsuic))+
+geom_line(col="blue") + labs(title="Gráfico 5")+
+geom_vline(xintercept = 1998, col="red", lty=2)
+```
+
+
+
+## Punto 4
+
+
+
+```{r}
+options("getSymbols.warning4.0"=FALSE)
+options("getSymbols.yahoo.warning"=FALSE)
+# Downloading Apple price using quantmod
+
+getSymbols("CIB", from = '2017-01-01',
+           to = "2022-08-11",warnings = FALSE,
+           auto.assign = TRUE)
+
+```
+
+```{r}
+head(CIB)
+```
+
+```{r}
+chart_Series(CIB)
+```
+
+```{r}
+chart_Series(CIB['2021-12/2022-03'])
+```
+```{r}
+CIB <- tq_get('CIB',
+               from = "2000-01-01",
+               to = "2022-08-11",
+               get = "stock.prices")
+```
+
+
+```{r}
+
+
+CIB %>%
+  ggplot(aes(x = date, y = adjusted)) +
+  geom_line() +
+  theme_classic() +
+  labs(x = 'Date',
+       y = "Adjusted Price",
+       title = "Bancolombia price chart") +
+  scale_y_continuous(breaks = seq(0,300,10))
+```
+
+
+

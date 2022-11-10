@@ -1,6 +1,6 @@
 ---
-title: "Untitled"
-author: "Ronald Palencia"
+title: "Modelo de series de tiempo para el SP500"
+author: "Ronald Palencia, Deivid Zhang"
 date: '2022-11-08'
 output:
   beamer_presentation: default
@@ -10,64 +10,152 @@ output:
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = FALSE)
 library(quantmod)
+library(tidyquant)
+library(tidyverse)
+library(stats)
+require(forecast)
+library(TSstudio)
+
 ```
 
-## R Markdown
+## Marco teorico
 
-This is an R Markdown presentation. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
-
-When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document.
-
-## Slide with Bullets
-
-- Bullet 1
-- Bullet 2
-- Bullet 3
+### Definición de un indíce bursatil 
 
 
-####cb a¿djdskmnm,ddm
+Un índice bursátil es un índice de referencia que se forma con un conjunto de valores cotizados en una bolsa de valores. 
 
-## Slide with R Output
+Sirve para representar la evolución de las empresas de un país, un determinado sector de la economía o un tipo de activo financiero.  
+#### Principales indices
+
+- Nasda
+
+- US30
+
+- S&P500
+
+- D30
+
+- COLCAP
+
+- COLEQTY
+![Imagén 1](./imagen1.jpeg){width = 0.1,  height = 0.2}
+
+
+## Marco teorico
+
+### S&P500
+
+es el índice de referencia del mercado de acciones y está conformado por 500 empresas, incluyendo muchas de las compañías más grandes del mundo, las cuales tienen su propia sede y cotizan en bolsas de los Estados Unidos. 
+
+- Apple Inc (AAPL). 
+
+- Microsoft Corp.
+
+- Nvidia Corp.
+
+- Amazon.
+
+- JP Morgan Chase & Co.
+
+
+## Marco teorico
+
+### Su importancia en la economía
+
+Un índice bursátil es un indicador de la bolsa de valores que actúa como un termómetro para la ecocomia de una país. 
+
+![Imagén 2](./imagen3.jpeg){width = 0.1  height = 0.2}
+
+
+ 
+
+
+## Análisis exploratorio y descriptivo
+
 
 ```{r}
-sp500 = getSymbols('^GSPC', from = '1995-1-1', auto.assign = F)
+getSymbols('^GSPC', from = '1995-01-01',warnings = FALSE, auto.assign = TRUE)
+```
+
+
+```{r, message=FALSE, fig.width=4, fig.height=3, warning=FALSE}
+# getSymbols('^GSPC', from = '1995-1-1', auto.assign = F)
+
+
+chart_Series(GSPC)
+
+```
+
+
+## Análisis exploratorio y descriptivo
+
+```{r, fig.width=4, fig.height=3}
+chart_Series(GSPC['2021-09/2022-11'])
+```
+
+
+
+```{r}
+GSPC <- tq_get('^GSPC', from = "2009-01-01", get = "stock.prices")
+```
+
+
+
+
+## Análisis exploratorio y descriptivo.
+
+
+
+```{r}
+serie <- GSPC %>% 
+  dplyr::select(date, close)
+
+
+serie <- serie %>% column_to_rownames(., var = "date")
+
 ```
 
 
 ```{r}
-tail(sp500)
-```
 
+serie <- ts(serie, start=2009, frequency=12)
 
-```{r cars, echo = TRUE}
-summary(cars)
-```
-
-
-
-```{python}
-import pandas as pd
-### permite obtener data frames directamente de internet
-!pip install yfinance
 
 ```
 
 
-```{python}
-import yfinance as yf
+
+```{r}
+desco <- decompose(serie, type="additive")
+
+plot(desco)
 ```
 
 
-```{python}
-#define the ticker symbol
-tickerSymbol = '^GSPC'
 
-#get data on this ticker
-tickerData = yf.Ticker(tickerSymbol)
 
-#get the historical prices for this ticker
-gs = tickerData.history(period='1d', start='1995-1-1', end='2022-11-7')
+## Justificación del modelo 
 
-#see your data
-gs.head(10)
+
+
+```{r}
+acf(serie)
 ```
+```{r}
+pacf(serie)
+```
+
+
+
+## Presentación de resultados 
+
+
+
+## Realización y validación de las predicciones 
+
+
+## Conclusiones y recomendaciones 
+
+
+
