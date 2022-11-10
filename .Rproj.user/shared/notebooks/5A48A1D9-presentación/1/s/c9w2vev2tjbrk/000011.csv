@@ -1,0 +1,3 @@
+"0","getSymbols('^GSPC', from = '1995-01-01',warnings = FALSE, auto.assign = TRUE)"
+"2","Error in new.session() : Could not establish session after 5 attempts.
+"

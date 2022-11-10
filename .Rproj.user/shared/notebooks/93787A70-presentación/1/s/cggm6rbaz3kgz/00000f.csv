@@ -1,1 +1,0 @@
-"0","GSPC <- tq_get('^GSPC', from = ""2009-01-01"", get = ""stock.prices"")"

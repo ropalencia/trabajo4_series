@@ -1,0 +1,6 @@
+"0","# getSymbols('^GSPC', from = '1995-1-1', auto.assign = F)"
+"0",""
+"0",""
+"0","chart_Series(GSPC)"
+"2","Error in chart_Series(GSPC) : object 'GSPC' not found
+"

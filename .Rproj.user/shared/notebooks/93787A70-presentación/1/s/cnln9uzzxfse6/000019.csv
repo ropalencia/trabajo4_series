@@ -1,6 +1,0 @@
-"0","serie <- GSPC %>% "
-"0","  dplyr::select(date, close)"
-"0",""
-"0",""
-"0","serie <- serie %>% column_to_rownames(., var = ""date"")"
-"0",""
