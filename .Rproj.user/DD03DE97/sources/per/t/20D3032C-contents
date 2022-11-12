@@ -2,9 +2,7 @@
 title: "Modelo de series de tiempo para el SP500"
 author: "Ronald Palencia, Deivid Zhang"
 date: '2022-11-08'
-output:
-  beamer_presentation: default
-  ioslides_presentation: default
+output: pdf_document
 ---
 
 ```{r setup, include=FALSE}
@@ -18,165 +16,99 @@ library(TSstudio)
 library(tseries)
 ```
 
-## Marco teórico
-
-### Definición de un índice bursátil 
-
-
-Un índice bursátil es un índice de referencia que se forma con un conjunto de valores cotizados en una bolsa de valores. 
-
-Sirve para representar la evolución de las empresas de un país, un determinado sector de la economía o un tipo de activo financiero.  
-#### Principales índices
-
-- Nasda
-
-- US30
-
-- S&P500
-
-- D30
-
-- COLCAP
-
-- COLEQTY
-![Imagén 1](./imagen1.jpeg){width = 0.1,  height = 0.2}
-
-
-## Marco teórico
-
-### S&P500
-
-Es el índice de referencia del mercado de acciones y está conformado por 500 empresas, incluyendo muchas de las compañías más grandes del mundo, las cuales tienen su propia sede y cotizan en bolsas de los Estados Unidos. 
-
-- Apple Inc (AAPL). 
-
-- Microsoft Corp.
-
-- Nvidia Corp.
-
-- Amazon.
-
-- JP Morgan Chase & Co.
-
-
-## Marco teorico
-
-### Su importancia en la economía
-
-Un índice bursátil es un indicador de la bolsa de valores que actúa como un termómetro para la ecocomia de un país. 
-
-![Imagén 2](./imagen3.jpeg){width = 0.1  height = 0.2}
-
-
- 
-
-
 ## Análisis exploratorio y descriptivo
-
 
 ```{r}
 getSymbols('^GSPC', from = '1995-01-01',warnings = FALSE, auto.assign = TRUE)
 ```
 
-
 ```{r, message=FALSE, fig.width=4, fig.height=3, warning=FALSE}
-# getSymbols('^GSPC', from = '1995-1-1', auto.assign = F)
-
-
 chart_Series(GSPC)
-
 ```
 
-
 ## Análisis exploratorio y descriptivo
-
 ```{r, fig.width=4, fig.height=3}
 chart_Series(GSPC['2021-09/2022-11'])
 ```
-
-
 
 ```{r}
 GSPC <- tq_get('^GSPC', from = "2009-01-01", get = "stock.prices")
 ```
 
-
-
-
 ## Análisis exploratorio y descriptivo.
-
-
-
 ```{r}
 serie <- GSPC %>% 
   dplyr::select(date, close)
 
-
 serie <- serie %>% column_to_rownames(., var = "date")
-
 ```
-
 
 ```{r}
-
-serie <- ts(serie, start=2009, frequency=12)
-
-
+#serie <- ts(serie, start=2009, frequency=12)
 ```
-
-
 
 ```{r}
-desco <- decompose(serie, type="multiplicative")
-
-plot(desco)
+# desco <- decompose(serie, type="multiplicative")
+# plot(desco)
 ```
-
-
-
 
 ## Justificación del modelo 
-
-
-
 ```{r}
-acf(serie)
-```
-```{r}
-pacf(serie)
+#acf(serie)
 ```
 
 ```{r}
-serie %>% adf.test() # no se rechaza H0, es decir, la serie no es estacionaria
-```
-```{r}
-serie %>% diff() %>% na.omit() %>% adf.test() # se rechaza H0, es decir, la serie diferenciada es estacionaria
+#pacf(serie)
 ```
 
+```{r}
+serie$close %>% adf.test() # no se rechaza H0, es decir, la serie no es estacionaria
+```
+```{r}
+serie$close %>% diff() %>% na.omit() %>% adf.test() # se rechaza H0, es decir, la serie diferenciada es estacionaria
+```
 
 Se puede observar que la acf tiene un patrón cola con decaimiento lento, por lo que es necesario tomar diferencias, es decir, $d \geq 1$, en la pacf, se puede observar un patrón de cola alternando signos. De la prueba de dicket fuller aumentado, se puede observar que solo hay que tomar una diferencia. Por lo tanto, los modelos a ajustar son ARIMA(p,1,q), donde $p,q \geq 1$. Para esto, se usa la función auto.arima del R para hallar el "mejor" modelo.
 
-```{r}
-#?auto.arima
-modelo_arima <- auto.arima(serie, stepwise = F, approximation = F) # ARIMA(2, 1, 2)
-modelo_arima
+```{r, echo=FALSE}
+ind = 1:(nrow(GSPC) - 8)
+serie_train <- GSPC[ind,]
+serie_test <- GSPC[-ind,]
 ```
 
 
 ```{r}
-modelo_arima %>%checkresiduals(lag = 20)
+#?auto.arima
+modelo_arima <- auto.arima(serie_train$close, stepwise = F, approximation = F, ic = "aic") # ARIMA(2, 1, 2)
+modelo_arima2 <- auto.arima(serie_train$close, stepwise = F, approximation = F, ic = "bic") # ARIMA(2, 1, 2)
+modelo_arima3 <- auto.arima(serie_train$close, stepwise = F, approximation = F, ic = "aicc") # ARIMA(2, 1, 2)
+modelo_arima
+# modelo_arima2
+# modelo_arima3
+```
+
+
+```{r}
+modelo_arima %>% checkresiduals(lag = 20)
 ```
 
 Del primer gráfico, se puede observar que los RB tienen media cero, pero no tiene varianza constante. Del segundo gráfico, se puede observar que los RB tienen autocorrelación, ya que hay estimaciones que salen de la banda de confianza. Del tercer gráfico, se puede observar que los RB no se distribuye normal. Por lo tanto, hay violación en los supuestos del RB.
 
-## Presentación de resultados 
+```{r}
+pronostico <- forecast(modelo_arima, h=nrow(serie_test))
 
+pronostico$mean
+pronostico$lower
+pronostico$upper
 
+sqrt(mean((serie_test$close - pronostico$mean)^2))
 
-## Realización y validación de las predicciones 
+```
 
-
-## Conclusiones y recomendaciones 
-
-
+```{r}
+#En el ajuste: Con ajuste ´optimo
+SEH=HoltWinters(serie,gamma=FALSE)
+#En el pron´ostico para m periodos, con I.P del 95 %
+predict(SEH,n.ahead=8,prediction.interval=T,level=0.95)
+```
 

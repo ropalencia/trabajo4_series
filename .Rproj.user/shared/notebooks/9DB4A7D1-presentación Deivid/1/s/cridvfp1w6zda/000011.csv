@@ -1,4 +1,4 @@
-"0","serie %>% adf.test()
+"0","serie$close %>% adf.test() # no se rechaza H0, es decir, la serie no es estacionaria
 "
 "1","
 "

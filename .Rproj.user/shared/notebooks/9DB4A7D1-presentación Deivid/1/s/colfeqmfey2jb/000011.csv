@@ -1,4 +1,4 @@
-"0","modelo_arima %>%checkresiduals(lag = 20)
+"0","modelo_arima %>% checkresiduals(lag = 20)
 "
 "1","
 "
@@ -13,7 +13,7 @@
 "1",""
 "1","
 "
-"1","Q* = 28.717, df = 15, p-value = 0.01749"
+"1","Q* = 28.351, df = 15, p-value = 0.01947"
 "1","
 "
 "1","

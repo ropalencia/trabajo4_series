@@ -1,0 +1,6 @@
+"0","sqrt(mean((serie_test$close - pronostico$mean)^2))
+"
+"1","[1]"
+"1"," 111.0669"
+"1","
+"
