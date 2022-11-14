@@ -1,0 +1,8 @@
+"0","b = data.frame("
+"0","marzo2013a=1*(seq_along(ts_mezcla2) == 27),"
+"0","julio2016a=1*(seq_along(ts_mezcla2) == 67),"
+"0","marzo2017a=1*(seq_along(ts_mezcla2) == 75),"
+"0","marzo2020a=1*c(rep(0,110),rep(1,30)),"
+"0","abril2020a=1*(seq_along(ts_mezcla2) == 112),"
+"0","junio2020a=1*c(rep(0,113),rep(1,27)),"
+"0","mayo2021a=1*(seq_along(ts_mezcla2) == 125))"

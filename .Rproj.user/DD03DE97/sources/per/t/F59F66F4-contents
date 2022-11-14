@@ -1,0 +1,205 @@
+---
+title: "Ejemplo clase 22-23-24 serie"
+author: "Deivid Zhang Figueroa"
+date: "2022-11-12"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+require(tidyverse)
+require(magrittr)
+require(readr)
+require(janitor)
+bd_incidentes <- read_delim(r"(C:\DEIROS777\Unal\2022-2\Serie\BD serie\incidentes_viales_motos.csv)",
+delim = ";")
+bd_incidentes %<>% clean_names()
+bd_incidentes %>% dim()
+aux1 <- as.Date(rep(NA, nrow(bd_incidentes)))
+aux2 <- bd_incidentes$fecha_incidente
+ind1<-which(nchar(aux2)==8)
+ind2<-which(nchar(aux2)==10)
+aux1[ind1] <- as.Date(aux2[ind1], format = " %d/ %m/ %y")
+aux1[ind2] <- as.Date(aux2[ind2], format = " %d/ %m/ %Y")
+bd_incidentes$fecha_incidente<-aux1
+require(lubridate)
+bd_incidentes$mes<-month(bd_incidentes$fecha_incidente)
+bd_incidentes$anio<-year(bd_incidentes$fecha_incidente)
+resum1 <- bd_incidentes %>% group_by(anio, mes) %>%
+summarise(accidentes=n())
+resum1$fecha <- as.Date(
+paste(resum1$anio,resum1$mes,1,sep="-"),
+format = " %Y-%m-%d")
+```
+
+```{r}
+resum1 %>% ggplot(aes(x=fecha, y=accidentes))+
+geom_line()
+```
+
+```{r}
+which.min(resum1$accidentes)
+```
+
+```{r}
+resum1_pre <- resum1[1:63,]
+```
+
+```{r}
+require(forecast)
+auto.arima(resum1_pre$accidentes, stepwise = FALSE,
+approximation = FALSE)
+```
+
+```{r}
+require(TSA)
+modelo1 <- arimax(resum1$accidentes, order=c(0, 0, 2),
+xtransf=data.frame(
+abril2020a=1 * (seq_along(resum1$accidentes) == 64)),
+transfer=list(c(1, 0)))
+```
+
+```{r}
+require(lmtest)
+modelo1 %>% coeftest()
+```
+
+```{r}
+modelo2 <- arimax(resum1$accidentes, order=c(0, 0, 2),
+xtransf=data.frame(
+abril2020a=1 * (seq_along(resum1$accidentes) == 64)),
+transfer=list(c(0, 0)))
+
+```
+
+```{r}
+modelo2 %>% coeftest()
+```
+
+# Clase 24
+```{r}
+require(tidyverse)
+require(magrittr)
+require(readxl)
+require(tsoutliers)
+require(forecast)
+bd_ini <- read_excel(r"(C:\DEIROS777\Unal\2022-2\Serie\BD serie\Anex_concreto_ago_22.xls)",
+sheet="Anexo 1 ", skip = 6)
+bd_ini %<>% rename("mezcla"="Producción")
+concreto <- data.frame(fecha=seq(as.Date("2011/1/1"),
+as.Date("2022/8/1"), "months"),
+mezcla=bd_ini[1:140, 3])
+```
+
+
+
+```{r}
+concreto %>% ggplot(aes(x=fecha, y=mezcla))+
+geom_line(col="blue")
+```
+
+```{r}
+ts_mezcla2 <- ts(concreto$mezcla, start=c(2011,1),
+frequency = 12)/100000
+mod_outliers0 <- tso(ts_mezcla2)
+mod_outliers0
+```
+
+```{r}
+mod_outliers0$fit$xreg
+```
+
+```{r}
+shapiro.test(mod_outliers0$fit$residuals)$p.value
+
+a = shapiro.test(mod_outliers0$fit$residuals)$p.value
+a$p.value
+```
+
+```{r}
+delta <- seq(0.1, 0.9, 0.1)
+aic_1 <- vector()
+ljungbox1 <- vector()
+normalidad <- vector()
+i = 0
+for(d in delta){
+  i = i+1
+  modelo_outl <- tso(ts_mezcla2, delta=d)
+  aic_1[i] <- modelo_outl$fit$bic
+  ljungbox1[i] <- checkresiduals(modelo_outl$fit,
+  plot = FALSE)$p.value
+  normalidad[i] <- shapiro.test(modelo_outl$fit$residuals)$p.value
+}
+```
+
+```{r}
+ts_mezcla2 <- ts(concreto$mezcla, start=c(2011,1),
+frequency = 12)/100000
+```
+
+
+```{r}
+modelo1_mez <- arimax(ts_mezcla2, order=c(1, 1, 0),
+seasonal = list(order = c(0, 1, 2)),
+xtransf=data.frame(
+marzo2013a=1*(seq_along(ts_mezcla2) == 27),
+julio2016a=1*(seq_along(ts_mezcla2) == 67),
+marzo2017a=1*(seq_along(ts_mezcla2) == 75),
+marzo2020a=1*c(rep(0,110),rep(1,30)),
+abril2020a=1*(seq_along(ts_mezcla2) == 112),
+junio2020a=1*c(rep(0,113),rep(1,27)),
+mayo2021a=1*(seq_along(ts_mezcla2) == 125)),
+transfer=list(c(0, 0),c(0, 0),c(0, 0),
+c(0, 0), c(1, 0), c(0,0),
+c(1,0)))
+
+```
+
+```{r}
+modelo_resultante <- tso(ts_mezcla2, delta=0.15)
+modelo_resultante
+```
+
+
+```{r}
+b = data.frame(
+marzo2013a=1*(seq_along(ts_mezcla2) == 27),
+julio2016a=1*(seq_along(ts_mezcla2) == 67),
+marzo2017a=1*(seq_along(ts_mezcla2) == 75),
+marzo2020a=1*c(rep(0,110),rep(1,30)),
+abril2020a=1*(seq_along(ts_mezcla2) == 112),
+junio2020a=1*c(rep(0,113),rep(1,27)),
+mayo2021a=1*(seq_along(ts_mezcla2) == 125))
+```
+
+```{r}
+table(b == modelo_resultante$fit$xreg)
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

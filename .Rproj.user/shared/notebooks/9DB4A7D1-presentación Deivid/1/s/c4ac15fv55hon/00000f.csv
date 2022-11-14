@@ -1,0 +1,6 @@
+"0","cierre <- ts(serie$close)"
+"0","class(cierre)"
+"1","[1]"
+"1"," ""ts"""
+"1","
+"

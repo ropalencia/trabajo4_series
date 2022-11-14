@@ -1,5 +1,4 @@
-"0","serie$close %>% diff() %>% na.omit() %>% adf.test() # se rechaza H0, es decir, la serie diferenciada es estacionaria
-"
+"0","serie$close %>% diff() %>% na.omit() %>% adf.test() # se rechaza H0, es decir, la serie diferenciada es estacionaria"
 "2","Warning: p-value smaller than printed p-value"
 "1","
 "
@@ -14,7 +13,7 @@
 "1",""
 "1","
 "
-"1","Dickey-Fuller = -15.18, Lag order = 15, p-value = 0.01"
+"1","Dickey-Fuller = -10.014, Lag order = 10, p-value = 0.01"
 "1","
 "
 "1","alternative hypothesis: "

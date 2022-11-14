@@ -1,0 +1,31 @@
+"0","require(tidyverse)"
+"0","require(magrittr)"
+"2","Loading required package: magrittr
+"
+"2","Warning: package ‘magrittr’ was built under R version 4.1.3"
+"2","
+Attaching package: ‘magrittr’
+
+"
+"2","The following object is masked from ‘package:purrr’:
+
+    set_names
+
+"
+"2","The following object is masked from ‘package:tidyr’:
+
+    extract
+
+"
+"0","require(readxl)"
+"2","Loading required package: readxl
+"
+"0","require(tsoutliers)"
+"0","require(forecast)"
+"0","bd_ini <- read_excel(r""(C:\DEIROS777\Unal\2022-2\Serie\BD serie\Anex_concreto_ago_22.xls)"","
+"0","sheet=""Anexo 1 "", skip = 6)"
+"2","New names:"
+"0","bd_ini %<>% rename(""mezcla""=""Producción"")"
+"0","concreto <- data.frame(fecha=seq(as.Date(""2011/1/1""),"
+"0","as.Date(""2022/8/1""), ""months""),"
+"0","mezcla=bd_ini[1:140, 3])"

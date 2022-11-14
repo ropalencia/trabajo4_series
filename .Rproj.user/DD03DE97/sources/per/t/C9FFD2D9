@@ -1,0 +1,28 @@
+{
+    "id": "C9FFD2D9",
+    "path": null,
+    "project_path": null,
+    "type": "object_explorer",
+    "hash": "0",
+    "contents": "",
+    "dirty": false,
+    "created": 1668454088469.0,
+    "source_on_save": false,
+    "relative_order": 5,
+    "properties": {
+        "id": "ee6214e4ee3b478182b9d7b9b4c22671",
+        "name": "fore2",
+        "title": "fore2",
+        "language": "R",
+        "source_window_id": "",
+        "Source": "Source"
+    },
+    "folds": "",
+    "lastKnownWriteTime": 732244431854727545,
+    "encoding": "",
+    "collab_server": "",
+    "source_window": "",
+    "last_content_update": 1668454088469,
+    "read_only": false,
+    "read_only_alternatives": []
+}

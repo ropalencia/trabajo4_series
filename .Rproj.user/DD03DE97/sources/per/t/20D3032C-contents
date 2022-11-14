@@ -14,12 +14,15 @@ library(stats)
 require(forecast)
 library(TSstudio)
 library(tseries)
+library(tsoutliers)
+library(TSA)
+library(tibble)
 ```
 
 ## Análisis exploratorio y descriptivo
 
 ```{r}
-getSymbols('^GSPC', from = '1995-01-01',warnings = FALSE, auto.assign = TRUE)
+getSymbols('^GSPC', from = '2018-01-01',warnings = FALSE, auto.assign = TRUE)
 ```
 
 ```{r, message=FALSE, fig.width=4, fig.height=3, warning=FALSE}
@@ -32,7 +35,7 @@ chart_Series(GSPC['2021-09/2022-11'])
 ```
 
 ```{r}
-GSPC <- tq_get('^GSPC', from = "2009-01-01", get = "stock.prices")
+GSPC <- tq_get('^GSPC', from = "2018-01-01", get = "stock.prices")
 ```
 
 ## Análisis exploratorio y descriptivo.
@@ -106,9 +109,128 @@ sqrt(mean((serie_test$close - pronostico$mean)^2))
 ```
 
 ```{r}
+#help("rownames_to_column")
+serie = rownames_to_column(serie, var = "fecha")
+```
+
+```{r}
 #En el ajuste: Con ajuste ´optimo
-SEH=HoltWinters(serie,gamma=FALSE)
+SEH=holt(serie$close, h = 5, initial = "optimal")
 #En el pron´ostico para m periodos, con I.P del 95 %
-predict(SEH,n.ahead=8,prediction.interval=T,level=0.95)
+SEH$model
+forecast(SEH)
+```
+
+```{r}
+SEH$model
+```
+
+```{r}
+# plot(serie$fecha, serie$close, ylab="candy production")
+# lines(SEH$fitted[,1], lty=2, col="blue")
+```
+
+```{r}
+#SEH$coefficients
+```
+
+## TSO
+```{r}
+cierre <- ts(serie$close)
+class(cierre)
+```
+
+```{r}
+#serie$fecha <- as.Date(serie$fecha)
+#help(tso)
+#tso(cierre, delta=0.7)
+```
+
+```{r}
+delta <- seq(0.1, 0.9, 0.1)
+aic_1 <- vector()
+ljungbox1 <- vector()
+normalidad <- vector()
+i = 0
+for(d in delta){
+  i = i+1
+  modelo_outl <- tso(cierre, delta=d)
+  aic_1[i] <- modelo_outl$fit$bic
+  ljungbox1[i] <- checkresiduals(modelo_outl$fit,
+  plot = FALSE)$p.value
+  normalidad[i] <- shapiro.test(modelo_outl$fit$residuals)$p.value
+}
+```
+
+```{r}
+aic_1
+ljungbox1
+normalidad
+which.min(aic_1)
+```
+
+
+```{r}
+mejor_modelo = tso(cierre, delta=0.5)
+mejor_modelo
+```
+
+```{r}
+mejor_modelo$fit$xreg[1226,]
+```
+
+# Predicción teniendo en cuenta la intervención
+```{r}
+#View(mejor_modelo$outliers)
+# ?outliers.effects()
+npred = 5
+newxreg <- outliers.effects(mejor_modelo$outliers,
+                            length(cierre) + npred)
+newxreg <- ts(newxreg[-seq_along(cierre),], start = 2018)
+fore2 <- forecast(mejor_modelo$fit, h=5, xreg = newxreg)
+fore2$mean
+fore2$lower
+fore2$upper
+```
+
+
+```{r}
+modelo1_mez <- arimax(cierre, order=c(0, 1, 0), seasonal = list(order = c(0, 0, 0)),
+                      xtransf=data.frame(a = 1*(seq_along(cierre) == 544), #TC
+                                         b = 1*(seq_along(cierre) == 546), #TC
+                                         c = 1*(seq_along(cierre) == 549), # AO
+                                         d = 1*(seq_along(cierre) == 552), # TC
+                                         e = 1*c(rep(0,553),rep(1,673)), # LS
+                                         f = 1*(seq_along(cierre) == 555), # AO
+                                         g = 1*c(rep(0,559),rep(1,667)), # LS
+                                         h = 1*(seq_along(cierre) == 562), # AO
+                                         i = 1*c(rep(0,568),rep(1,658)), # LS
+                                         j = 1*(seq_along(cierre) == 615), # TC
+                                         k = 1*(seq_along(cierre) == 1093)), # TC
+                      transfer=list(c(1, 0), c(1, 0),
+                                    c(0, 0), c(1, 0),
+                                    c(0, 0), c(0,0),
+                                    c(0,0), c(0,0),
+                                    c(0,0), c(1,0),
+                                    c(1,0)))
+
+```
+
+```{r}
+a = data.frame(a = 1*(seq_along(cierre) == 544), #TC
+                                         b = 1*(seq_along(cierre) == 546), #TC
+                                         c = 1*(seq_along(cierre) == 549), # AO
+                                         d = 1*(seq_along(cierre) == 552), # TC
+                                         e = 1*c(rep(0,553),rep(1,673)), # LS
+                                         f = 1*(seq_along(cierre) == 555), # AO
+                                         g = 1*c(rep(0,559),rep(1,667)), # LS
+                                         h = 1*(seq_along(cierre) == 562), # AO
+                                         i = 1*c(rep(0,568),rep(1,658)), # LS
+                                         j = 1*(seq_along(cierre) == 615), # TC
+                                         k = 1*(seq_along(cierre) == 1093))
+```
+
+```{r}
+table(a == mejor_modelo$fit$xreg)
 ```
 

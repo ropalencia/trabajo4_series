@@ -1,0 +1,37 @@
+"0","SEH$model"
+"1","Holt's method 
+
+"
+"1","Call:
+ holt(y = serie$close, h = 5, initial = ""optimal"") 
+
+"
+"1","  Smoothing parameters:
+"
+"1","    alpha = 0.8929 
+"
+"1","    beta  = 1e-04 
+"
+"1","
+  Initial states:
+"
+"1","    l = 2765.277 
+"
+"1","    b = 1.232 
+"
+"1","
+  sigma:  "
+"1","44.7208"
+"1","
+
+"
+"1","     AIC "
+"1","    AICc "
+"1","     BIC "
+"1","
+"
+"1","18043.38 "
+"1","18043.43 "
+"1","18068.94 "
+"1","
+"

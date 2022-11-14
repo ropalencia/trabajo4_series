@@ -1,0 +1,2 @@
+"0","ts_mezcla2 <- ts(concreto$mezcla, start=c(2011,1),"
+"0","frequency = 12)/100000"
