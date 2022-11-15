@@ -1,3 +1,0 @@
-"0","ind = 1:(nrow(GSPC) - 8)"
-"0","serie_train <- GSPC[ind,]"
-"0","serie_test <- GSPC[-ind,]"

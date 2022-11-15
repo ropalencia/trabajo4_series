@@ -1,0 +1,4 @@
+"0","newxreg <- ts(newxreg[-seq_along(cierre),], start = 2018)
+"
+"2","Error in is.data.frame(data) : object 'newxreg' not found
+"

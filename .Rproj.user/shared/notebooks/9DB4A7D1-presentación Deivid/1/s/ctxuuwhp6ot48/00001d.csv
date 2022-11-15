@@ -1,3 +1,0 @@
-"0","#serie$fecha <- as.Date(serie$fecha)"
-"0","#help(tso)"
-"0","#tso(cierre, delta=0.7)"

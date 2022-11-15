@@ -1,0 +1,3 @@
+"0","MSE <- function(real, pred){"
+"0","  mean( (real-pred)^2 )"
+"0","}"

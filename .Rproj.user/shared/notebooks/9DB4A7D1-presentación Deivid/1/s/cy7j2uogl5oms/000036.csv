@@ -1,2 +1,0 @@
-"0","# plot(serie$fecha, serie$close, ylab=""candy production"")"
-"0","# lines(SEH$fitted[,1], lty=2, col=""blue"")"

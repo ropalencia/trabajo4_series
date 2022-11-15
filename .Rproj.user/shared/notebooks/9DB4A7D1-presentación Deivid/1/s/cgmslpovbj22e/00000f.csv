@@ -1,2 +1,0 @@
-"0","#help(""rownames_to_column"")"
-"0","serie = rownames_to_column(serie, var = ""fecha"")"
