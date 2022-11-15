@@ -1,6 +1,0 @@
-"0","plot(serie$fecha, serie$close, ylab=""candy production"")"
-"2","Warning: NAs introduced by coercion"
-"2","Warning: no non-missing arguments to min; returning Inf"
-"2","Warning: no non-missing arguments to max; returning -Inf"
-"2","Error in plot.window(...) : se necesitan valores finitos de 'xlim'
-"

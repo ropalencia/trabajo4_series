@@ -147,26 +147,26 @@ class(cierre)
 ```
 
 ```{r}
-delta <- seq(0.1, 0.9, 0.1)
-aic_1 <- vector()
-ljungbox1 <- vector()
-normalidad <- vector()
-i = 0
-for(d in delta){
-  i = i+1
-  modelo_outl <- tso(cierre, delta=d)
-  aic_1[i] <- modelo_outl$fit$bic
-  ljungbox1[i] <- checkresiduals(modelo_outl$fit,
-  plot = FALSE)$p.value
-  normalidad[i] <- shapiro.test(modelo_outl$fit$residuals)$p.value
-}
+# delta <- seq(0.1, 0.9, 0.1)
+# aic_1 <- vector()
+# ljungbox1 <- vector()
+# normalidad <- vector()
+# i = 0
+# for(d in delta){
+#   i = i+1
+#   modelo_outl <- tso(cierre, delta=d)
+#   aic_1[i] <- modelo_outl$fit$bic
+#   ljungbox1[i] <- checkresiduals(modelo_outl$fit,
+#   plot = FALSE)$p.value
+#   normalidad[i] <- shapiro.test(modelo_outl$fit$residuals)$p.value
+# }
 ```
 
 ```{r}
-aic_1
-ljungbox1
-normalidad
-which.min(aic_1)
+# aic_1
+# ljungbox1
+# normalidad
+# which.min(aic_1)
 ```
 
 
@@ -176,7 +176,7 @@ mejor_modelo
 ```
 
 ```{r}
-mejor_modelo$fit$xreg[1226,]
+#mejor_modelo$fit$xreg[1226,]
 ```
 
 # Predicción teniendo en cuenta la intervención
@@ -195,42 +195,26 @@ fore2$upper
 
 
 ```{r}
-modelo1_mez <- arimax(cierre, order=c(0, 1, 0), seasonal = list(order = c(0, 0, 0)),
-                      xtransf=data.frame(a = 1*(seq_along(cierre) == 544), #TC
-                                         b = 1*(seq_along(cierre) == 546), #TC
-                                         c = 1*(seq_along(cierre) == 549), # AO
-                                         d = 1*(seq_along(cierre) == 552), # TC
-                                         e = 1*c(rep(0,553),rep(1,673)), # LS
-                                         f = 1*(seq_along(cierre) == 555), # AO
-                                         g = 1*c(rep(0,559),rep(1,667)), # LS
-                                         h = 1*(seq_along(cierre) == 562), # AO
-                                         i = 1*c(rep(0,568),rep(1,658)), # LS
-                                         j = 1*(seq_along(cierre) == 615), # TC
-                                         k = 1*(seq_along(cierre) == 1093)), # TC
-                      transfer=list(c(1, 0), c(1, 0),
-                                    c(0, 0), c(1, 0),
-                                    c(0, 0), c(0,0),
-                                    c(0,0), c(0,0),
-                                    c(0,0), c(1,0),
-                                    c(1,0)))
+# modelo1_mez <- arimax(cierre, order=c(0, 1, 0), seasonal = list(order = c(0, 0, 0)),
+#                       xtransf=data.frame(a = 1*(seq_along(cierre) == 544), #TC
+#                                          b = 1*(seq_along(cierre) == 546), #TC
+#                                          c = 1*(seq_along(cierre) == 549), # AO
+#                                          d = 1*(seq_along(cierre) == 552), # TC
+#                                          e = 1*c(rep(0,553),rep(1,673)), # LS
+#                                          f = 1*(seq_along(cierre) == 555), # AO
+#                                          g = 1*c(rep(0,559),rep(1,667)), # LS
+#                                          h = 1*(seq_along(cierre) == 562), # AO
+#                                          i = 1*c(rep(0,568),rep(1,658)), # LS
+#                                          j = 1*(seq_along(cierre) == 615), # TC
+#                                          k = 1*(seq_along(cierre) == 1093)), # TC
+#                       transfer=list(c(1, 0), c(1, 0),
+#                                     c(0, 0), c(1, 0),
+#                                     c(0, 0), c(0,0),
+#                                     c(0,0), c(0,0),
+#                                     c(0,0), c(1,0),
+#                                     c(1,0)))
 
 ```
 
-```{r}
-a = data.frame(a = 1*(seq_along(cierre) == 544), #TC
-                                         b = 1*(seq_along(cierre) == 546), #TC
-                                         c = 1*(seq_along(cierre) == 549), # AO
-                                         d = 1*(seq_along(cierre) == 552), # TC
-                                         e = 1*c(rep(0,553),rep(1,673)), # LS
-                                         f = 1*(seq_along(cierre) == 555), # AO
-                                         g = 1*c(rep(0,559),rep(1,667)), # LS
-                                         h = 1*(seq_along(cierre) == 562), # AO
-                                         i = 1*c(rep(0,568),rep(1,658)), # LS
-                                         j = 1*(seq_along(cierre) == 615), # TC
-                                         k = 1*(seq_along(cierre) == 1093))
-```
 
-```{r}
-table(a == mejor_modelo$fit$xreg)
-```
 

@@ -3,7 +3,7 @@
     "path": "~/GitHub/trabajo4_series/presentación Deivid.Rmd",
     "project_path": "presentación Deivid.Rmd",
     "type": "r_markdown",
-    "hash": "1413965084",
+    "hash": "0",
     "contents": "",
     "dirty": false,
     "created": 1668105239332.0,
@@ -13,16 +13,16 @@
         "tempName": "Untitled1",
         "source_window_id": "",
         "Source": "Source",
-        "cursorPosition": "181,47",
-        "scrollLine": "176",
-        "last_setup_crc32": "74E1386Fcb046333"
+        "cursorPosition": "191,11",
+        "scrollLine": "189",
+        "last_setup_crc32": "AAA7636Fcb046333"
     },
     "folds": "",
-    "lastKnownWriteTime": 1668454472,
+    "lastKnownWriteTime": 1668471939,
     "encoding": "UTF-8",
     "collab_server": "",
     "source_window": "",
-    "last_content_update": 1668454472332,
+    "last_content_update": 1668471939789,
     "read_only": false,
     "read_only_alternatives": []
 }
