@@ -269,3 +269,19 @@ sqrt(MSE(3988.072, 3957.25))
 MAPE(3988.072, 3957.25)
 ```
 
+```{r}
+reales <- c(3957.25, 3991.73)
+pronosticados_param <- c(3992.93, 3992.93)
+pronosticados_no_param <- c(3988.072, 3989.273)
+```
+
+```{r}
+sqrt(mean((reales-pronosticados_param)^2))
+100 * mean( abs( (reales-pronosticados_param)/reales) )
+```
+
+```{r}
+sqrt(mean((reales-pronosticados_no_param)^2))
+100 * mean( abs( (reales-pronosticados_no_param)/reales) )
+```
+
